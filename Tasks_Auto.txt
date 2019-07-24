@@ -1,0 +1,164 @@
+-  Найти все марки автомобилей черного и белого цвета,  с максимальной скоростью от 150 до 230,  и название типа кузова которых   состоит из более, чем 5 букв (решить 2 способами).
+•  Вывести топ-2 всех производителей автомобилей с типом двигателя дизель, отсортировать по убыванию (решить 2 способами).
+•  Вывести марку автомобиля с наибольшей максимальной скоростью.
+•  Вывести тип двигателя  и тип кузова всех автомобилей максимальная скорость которых ниже 200 и, название производителя которых  менее 7 символов.
+•  Вывести количество автомобилей красного цвета.
+•  Вывести производителей автомобилей, марка авто которых совпадает с названием производителя.
+
+ANSWERS
+
+TASK 1
+
+
+http://jtest.ru/bazyi-dannyix/sql-dlya-nachinayushhix-chast-3.html
+
+STEP 1
+ 
+sqlite> select *  from Characteristic where Color in ('Black', 'White') and Speed between 150 and 230;
+
+12|Black|200|diesel|sedan|136|1
+25|White|180|gas|crossover|160|8
+
+STEP 2
+
+sqlite> select *  from Characteristic where Color in ('Black', 'White') and Speed between 150 and 230 and Cabin not like '_____';
+
+25|White|180|gas|crossover|160|8
+
+STEP 3
+
+sqlite> select Make from Auto join Characteristic where Auto.ID=Characteristic.Auto_ID and 
+
+Characteristic.Auto_ID in (select Auto_ID from Characteristic where Color in ('Black', 'White') and Speed between 150 and 230 and Cabin not like '_____');
+
+Mercedes
+==================================================================================================================================================================================================
+
+TASK 2
+
+http://www.sqlitetutorial.net/sqlite-limit/
+
+Step 1
+
+sqlite> select Maker from Auto limit 2;
+Volkswagen
+Volkswagen
+
+Step 2
+
+sqlite> select Maker from Auto join Characteristic where Auto.ID=Characteristic.Auto_ID and Characteristic.Auto_ID in 
+(select Auto_ID from Characteristic where EngineType='diesel');
+
+Volkswagen
+Volkswagen
+Volkswagen
+Toyota
+
+Step 3
+
+sqlite> select Maker from Auto join Characteristic where Auto.ID=Characteristic.Auto_ID and Characteristic.Auto_ID in 
+(select Auto_ID from Characteristic where EngineType='diesel') limit 2;
+
+Volkswagen
+Volkswagen
+
+Step 4
+
+sqlite> select Maker from Auto join Characteristic where Auto.ID=Characteristic.Auto_ID and Characteristic.Auto_ID in 
+(select Auto_ID from Characteristic where EngineType='diesel') order by HP desc limit 2;
+Volkswagen
+Toyota
+======================================================================================================================
+
+Task 3
+
+sqlite> select Make from Auto join Characteristic where Auto.ID=Characteristic.Auto_ID and Characteristic.Auto_ID in 
+(select Auto_ID from Characteristic order by Speed desc limit 1);
+
+Lamborgini
+========================================================================================================================
+
+
+Task 4
+
+http://code.mu/sql/length.html
+
+Step 1
+
+sqlite> select EngineType, Cabin, Speed from Characteristic join Auto on (Auto.ID=Characteristic.Auto_ID) where Characteristic.Speed<200;
+
+electric|van|150
+diesel|hatchback|115
+gas|crossover|180
+
+Step 2
+
+sqlite> select EngineType, Cabin, Speed from Characteristic join Auto on (Auto.ID=Characteristic.Auto_ID) where Characteristic.Speed<200 and Auto.Maker='Volkswagen';
+electric|van|150
+diesel|hatchback|115
+
+Step 3
+
+sqlite> select EngineType, Cabin, Speed from Characteristic join Auto on (Auto.ID=Characteristic.Auto_ID) where Characteristic.Speed<200 and length(Auto.Maker)<7;
+
+sqlite>
+===================================================================================================================================
+
+Task 5
+
+https://myrusakov.ru/sql-count.html
+
+sqlite> select count(*) from Characteristic where Color='Red';
+
+1
+========================================================================================================================================
+
+Task 6
+
+sqlite> select Maker from Auto where Maker=Make;
+
+Volkswagen
+Mercedes
+BMW
+Toyota
+=====================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
